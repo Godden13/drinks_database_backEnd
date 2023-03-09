@@ -3,6 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
+var env = require("dotenv")
+
+env.config()
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -15,6 +21,8 @@ const relate = require('./database/relationships');
 const { use } = require('./routes/users');
 
 var app = express();
+app.use(cors());
+
 relate()
 
 // view engine setup
