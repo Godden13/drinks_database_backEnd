@@ -1,20 +1,19 @@
 const express = require("express");
-const { getDrinks, postDrinks, getOneDrink, putDrink, patchDrink, deleteDrink } = require("../Controllers/DrinkControllers");
-// const authenticateKey = require("../services/apiAuth");
-// const { authMiddleware } = require("../services/auth");
+const DrinkControllers = require("../Controllers/DrinkControllers");
+const { authAdmin, authApiKey } = require("../services/auth");
 const router = express.Router();
 
 
-router.get("/", getDrinks );
+router.get("/", authApiKey, DrinkControllers.getDrinks );
 
-router.post("/", postDrinks);
+router.post("/", authAdmin, DrinkControllers.postDrinks);
 
-router.get("/:id", getOneDrink);
+router.get("/:id", authApiKey, DrinkControllers.getOneDrink);
 
-router.put("/:id", putDrink);
+router.put("/:id", authAdmin, DrinkControllers.putDrink);
 
-router.patch("/:id", patchDrink);
+router.patch("/:id", authAdmin, DrinkControllers.patchDrink);
 
-router.delete("/:id", deleteDrink);
+router.delete("/:id", authAdmin, DrinkControllers.deleteDrink);
 
 module.exports = router;

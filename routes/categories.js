@@ -1,18 +1,19 @@
 const express = require("express");
-const { getCategory, getOneCategory, postCategory, putCategory, patchCategory, deleteCategory } = require("../Controllers/CategoriesController");
+const CategoriesController = require("../Controllers/CategoriesController");
 const Categories = require("../database/categories");
-const { authMiddleware } = require("../services/auth");
+const { authApiKey, authAdmin } = require("../services/auth");
 const router = express.Router();
 
-router.get("/", getCategory);
+router.get("/", authApiKey, CategoriesController.getCategory);
 
-router.post("/", postCategory);
+router.post("/", authAdmin, CategoriesController.postCategory);
 
-router.get("/:id", getOneCategory);
+router.get("/:id", authApiKey, CategoriesController.getOneCategory);
 
-router.put("/:id", putCategory);
+router.put("/:id", authAdmin, CategoriesController.putCategory);
 
-router.patch("/:id", patchCategory);
-router.delete("/:id", deleteCategory);
+router.patch("/:id", authAdmin, CategoriesController.patchCategory);
+
+router.delete("/:id", authAdmin, CategoriesController.deleteCategory);
 
 module.exports = router;

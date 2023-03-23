@@ -42,18 +42,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(authMiddleware)
-const API_KEYS = ["1", "2", "3", "4"];
 
-app.use(function (req, res, next) {
-  const { apiKey } = req.query;
-  const key = req.get("x-api-key")
-  if (API_KEYS.includes(apiKey) || API_KEYS.includes(key)) {
-    next();
-  } else {
-    res.sendStatus(403)
-  }
-})
+// app.use(function (req, res, next) {
+//   const { apiKey } = req.query;
+//   const key = req.get("x-api-key")
+//   if (API_KEYS.includes(apiKey) || API_KEYS.includes(key)) {
+//     next();
+//   } else {
+//     res.sendStatus(403)
+//   }
+// })
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

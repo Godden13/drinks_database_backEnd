@@ -1,7 +1,7 @@
 var express = require('express');
 
-const { authMiddleware } = require('../services/auth');
-const { getUsers, postUser, getOneUser, putUser, patchUser, deleteUser } = require('../Controllers/UserController');
+const { authMiddleware, authApiKey } = require('../services/auth');
+const UserController = require('../Controllers/UserController');
 var router = express.Router();
 
 /* GET users listing. */
@@ -107,16 +107,16 @@ var router = express.Router();
  *         description: The user was not found
  */
 
-router.get("/", authMiddleware, getUsers);
+router.get("/", authMiddleware, UserController.getUsers);
 
-router.post("/",  postUser)
+router.post("/", UserController.postUser)
 
-router.get("/:id", authMiddleware, getOneUser);
+router.get("/:id", authMiddleware, UserController.getOneUser);
 
-router.put("/:id", authMiddleware, putUser)
+router.put("/:id", authMiddleware, UserController.putUser)
 
-router.patch("/:id", authMiddleware, patchUser)
+router.patch("/:id", authMiddleware, UserController.patchUser)
 
-router.delete("/:id", authMiddleware, deleteUser);
+router.delete("/:id", authMiddleware, UserController.deleteUser);
 
 module.exports = router;
