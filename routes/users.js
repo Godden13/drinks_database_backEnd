@@ -1,57 +1,122 @@
 var express = require('express');
-const Drink = require('../database/drinks');
-const User = require('../database/users');
+
+const { authMiddleware, authApiKey } = require('../services/auth');
+const UserController = require('../Controllers/UserController');
 var router = express.Router();
 
 /* GET users listing. */
-router.get("/", async function (req, res) {
-  const user = await User.findAll({ include: Drink });
-  res.send(user);
-});
 
-router.post("/", async function (req, res) {
-  const  { firstName, lastName, emailAddress, phone, password } = req.body
-  const user = await User.create({
-    firstName,
-    lastName,
-    emailAddress,
-    phone,
-    password,
-    apiKey: Date.now(),
-    is_admin,
-  });
-  req.send(user);
-})
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: The books managing API
+ * /users:
+ *   get:
+ *     summary: Lists all the users
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: The list of the users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *   post:
+ *     summary: Create a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The created user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ * /users/{id}:
+ *   get:
+ *     summary: Get the user by id
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user id
+ *     responses:
+ *       200:
+ *         description: The user response by id
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/user'
+ *       404:
+ *         description: The user was not found
+ *   put:
+ *    summary: Update the user by the id
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The user id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/User'
+ *    responses:
+ *      200:
+ *        description: The user was updated
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *      404:
+ *        description: The user was not found
+ *      500:
+ *        description: Some error happened
+ *   delete:
+ *     summary: Remove the user by id
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user id
+ *
+ *     responses:
+ *       200:
+ *         description: The user was deleted
+ *       404:
+ *         description: The user was not found
+ */
 
-router.get("/:id", async function (req, res) {
-  const user = await User.findByPk(req.params.id);
-  res.send(user);
-});
+router.get("/", authMiddleware, UserController.getUsers);
 
-router.put("/:id", async function (req, res) {
-  const { firstName, lastName, email, phone, password } = req.body;
-  if (firstName && lastName && email && phone && password) {
-    await User.update(req.body, { where: { id: req.params.id } });
-    const user = await User.findByPk(req.params.id)
-    res.send(user)
-  }
-  res.send({ message: "validation Error: Field Missing" })
-})
+router.post("/", UserController.postUser)
 
-router.patch("/:id", async function (req, res) {
-  const { firstName, lastName, emailAddress, phone, password } = req.body;
-  await User.update(req.body, { where: { id: req.params.id } })
-  const user = await User.findByPk(req.params.id)
-  res.send(user)
-})
+router.get("/:id", authMiddleware, UserController.getOneUser);
 
-router.delete("/:id", async function (req, res) {
-  const user = await User.destroy({
-    where: {
-      id: req.params.id
-    },
-  });
-  res.send("Success");
-});
+router.put("/:id", authMiddleware, UserController.putUser)
+
+router.patch("/:id", authMiddleware, UserController.patchUser)
+
+router.delete("/:id", authMiddleware, UserController.deleteUser);
 
 module.exports = router;

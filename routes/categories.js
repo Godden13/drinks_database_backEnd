@@ -1,40 +1,18 @@
 const express = require("express");
-const Categories = require("../database/categories");
+const CategoriesController = require("../Controllers/CategoriesController");
+const { authApiKey, authAdmin, authMiddleware } = require("../services/auth");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const category = await Categories.findAll();
-  res.send(category);
-});
+router.get("/", authApiKey, CategoriesController.getCategory);
 
-router.post("/", async (req, res) => {
-  const category = await Categories.create(req.body);
-  res.send(category);
-});
+router.post("/", authMiddleware, authAdmin, CategoriesController.postCategory);
 
-router.get("/:id", async (req, res) => {
-  const category = await Categories.findByPk(req.params.id);
-  res.send(category);
-});
+router.get("/:id", authApiKey, CategoriesController.getOneCategory);
 
-router.put("/:id", async (req, res) => {
-  const { name, description } = req.body;
-  if (name && description) {
-    await Categories.update(req.body, { where: { id: req.params.id } });
-    const category = await Categories.findByPk(req.params.id);
-    res.send(category);
-  }
-  res.send({ message: "Validation Error" })
-});
+router.put("/:id", authMiddleware, authAdmin, CategoriesController.putCategory);
 
-router.patch("/:id", async (req, res) => {
-  await Categories.update(req.body, { where: { id: req.params.id } });
-  const category = await Categories.findByPk(req.params.id);
-  res.send(category);
-});
-router.delete("/:id", async (req, res) => {
-  const category = await Categories.destroy({ where: { id: req.params.id } })
-  res.send("Status: Success")
-});
+router.patch("/:id", authMiddleware, authAdmin, CategoriesController.patchCategory);
+
+router.delete("/:id", authMiddleware, authAdmin, CategoriesController.deleteCategory);
 
 module.exports = router;

@@ -1,41 +1,18 @@
 const express = require("express");
-const Ingredient = require("../database/ingredients");
+const { getIngredient, postIngredient, getOneIngredient, putIngredient, patchIngredient, deleteIngredient } = require("../Controllers/IngredientController");
+const { authApiKey, authAdmin, authMiddleware } = require("../services/auth");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const ingredient = await Ingredient.findAll();
-  res.send(ingredient);
-});
+router.get("/", authApiKey, getIngredient);
 
-router.post("/", async (req, res) => {
-  const ingredient = await Ingredient.create(req.body);
-  res.send(ingredient);
-});
+router.post("/", authMiddleware, authAdmin, postIngredient);
 
-router.get("/:id", async (req, res) => {
-  const ingredient = await Ingredient.findByPk(req.params.id);
-  res.send(ingredient);
-});
+router.get("/:id", authApiKey, getOneIngredient);
 
-router.put("/:id", async (req, res) => {
-  const { name, description } = req.body;
-  if (name && description) {
-    await Ingredient.update(req.body, { where: { id: req.params.id } });
-    const ingredient = await Ingredient.findByPk(req.params.id);
-    res.send(ingredient);
-  }
-  res.send({ message: "Validation Error" })
-});
+router.put("/:id", authMiddleware, authAdmin, putIngredient);
 
-router.patch("/:id", async (req, res) => {
-  await Ingredient.update(req.body, { where: { id: req.params.id } });
-  const ingredient = await Ingredient.findByPk(req.params.id);
-  res.send(ingredient);
-});
+router.patch("/:id", authMiddleware, authAdmin, patchIngredient);
 
-router.delete("/:id", async (req, res) => {
-  const ingredient = await Ingredient.destroy({ where: { id: req.params.id } })
-  res.send("Status: Success")
-});
+router.delete("/:id", authMiddleware, authAdmin, deleteIngredient);
 
 module.exports = router;

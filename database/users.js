@@ -9,14 +9,14 @@ const User = sequelize.define("user", {
   },
   firstName: DataTypes.STRING,
   lastName: DataTypes.STRING,
-  email: {
+  emailAddress: {
     type: DataTypes.STRING,
     unique: true,
   },
   phone: DataTypes.STRING,
   apiKey: DataTypes.STRING,
   password: DataTypes.STRING,
-  is_admin: DataTypes.BOOLEAN
+  is_admin: {type: DataTypes.BOOLEAN, defaultValue: false}
 },
   {
     timestamps: true,

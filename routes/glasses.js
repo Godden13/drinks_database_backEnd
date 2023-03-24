@@ -1,40 +1,18 @@
 const express = require("express");
-const Glass = require("../database/glasses");
+const GlassController = require("../Controllers/GlassController");
+const { authApiKey, authAdmin, authMiddleware } = require("../services/auth");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const glass = await Glass.findAll();
-  res.send(glass);
-});
+router.get("/", authApiKey, GlassController.getGlasses);
 
-router.post("/", async (req, res) => {
-  const glass = await Glass.create(req.body);
-  res.send(glass);
-});
+router.post("/", authMiddleware, authAdmin, GlassController.postGlass);
 
-router.get("/:id", async (req, res) => {
-  const glass = await Glass.findByPk(req.params.id);
-  res.send(glass);
-});
+router.get("/:id", authApiKey, GlassController.getOneGlass);
 
-router.put("/:id", async (req, res) => {
-  const { name } = req.body;
-  if (name) {
-    await Glass.update(req.body, { where: { id: req.params.id } });
-    const glass = await Glass.findByPk(req.params.id);
-    res.send(glass);
-  }
-  res.send({ message: "Validation Error" })
-});
+router.put("/:id", authMiddleware, authAdmin, GlassController.putGlass);
 
-router.patch("/:id", async (req, res) => {
-  await Glass.update(req.body, { where: { id: req.params.id } });
-  const glass = await Glass.findByPk(req.params.id);
-  res.send(glass);
-});
-router.delete("/:id", async (req, res) => {
-  const glass = await Glass.destroy({ where: { id: req.params.id } })
-  res.send("Status: Success")
-});
+router.patch("/:id", authMiddleware, authAdmin, GlassController.patchGlass);
+
+router.delete("/:id", authMiddleware, authAdmin, GlassController.deleteGlass);
 
 module.exports = router;
