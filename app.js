@@ -16,7 +16,6 @@ var categoriesRouter = require('./routes/categories');
 var glassesRouter = require('./routes/glasses');
 
 const relate = require('./database/relationships');
-const { use } = require('./routes/users');
 const swaggerFile = require('./services/swagger');
 const specs = require('./services/swagger');
 const { authMiddleware } = require('./services/auth');
@@ -43,15 +42,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-// app.use(function (req, res, next) {
-//   const { apiKey } = req.query;
-//   const key = req.get("x-api-key")
-//   if (API_KEYS.includes(apiKey) || API_KEYS.includes(key)) {
-//     next();
-//   } else {
-//     res.sendStatus(403)
-//   }
-// })
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -1,3 +1,6 @@
+const Categories = require("../database/categories");
+
+
 const getCategory = async (req, res) => {
   const category = await Categories.findAll();
   res.send(category);
