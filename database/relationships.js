@@ -5,8 +5,6 @@ const Drink = require("./drinks");
 const Ingredient = require("./ingredients");
 const User = require("./users");
 
-
-
 function relate() {
   sequelize.sync()
   User.hasMany(Drink);
