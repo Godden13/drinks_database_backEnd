@@ -7,7 +7,7 @@ const getDrinks = async (req, res) => {
 };
 
 const postDrinks = async (req, res) => {
-  const drink = await Drink.create(req.body);
+  const drink = await Drink.create({...req.body, categoryIds: [1]});
   res.send(drink);
 };
 
@@ -36,6 +36,10 @@ const deleteDrink = async (req, res) => {
   const drink = await Drink.destroy({ where: { id: req.params.id } })
   res.send("Status: Success")
 };
+
+const filterDrinks = async (req, res) => {
+  const drink = Drink.findAll({where: { category.id: req.params.id}})
+}
 
 module.exports = {
   getDrinks,
