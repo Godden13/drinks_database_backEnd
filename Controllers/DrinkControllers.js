@@ -7,6 +7,7 @@ const getDrinks = async (req, res) => {
 };
 
 const postDrinks = async (req, res) => {
+  const {name, description, recipe, imageUrl} = req.body;
   const drink = await Drink.create({...req.body, categoryIds: [1]});
   res.send(drink);
 };
