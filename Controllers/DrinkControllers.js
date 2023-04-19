@@ -38,9 +38,9 @@ const deleteDrink = async (req, res) => {
   res.send("Status: Success")
 };
 
-const filterDrinks = async (req, res) => {
-  const drink = Drink.findAll({where: { category.id: req.params.id}})
-}
+// const filterDrinks = async (req, res) => {
+//   const drink = Drink.findAll({where: { category.id: req.params.id}})
+// }
 
 module.exports = {
   getDrinks,
