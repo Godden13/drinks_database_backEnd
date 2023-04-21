@@ -48,5 +48,5 @@ module.exports = {
   getOneDrink,
   putDrink,
   patchDrink,
-  deleteDrink
+  deleteDrink 
 }
